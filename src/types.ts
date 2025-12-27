@@ -26,7 +26,6 @@ export interface ScanAction extends EcoActionBase {
   packaging: 'plastic' | 'paper' | 'glass' | 'metal' | 'mixed';
   origin: 'local' | 'imported';
   expiryPredictionDays: number;
-  receiptUrl?: string;
 }
 
 export interface TravelLog extends EcoActionBase {

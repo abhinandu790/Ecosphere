@@ -3,23 +3,13 @@ import { Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-
 import { useEcoSphereStore } from '@/state/store';
 
 export const CommunityScreen: React.FC = () => {
-  const { communityEvents, completeEvent, user } = useEcoSphereStore();
+  const { communityEvents, completeEvent } = useEcoSphereStore();
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Text style={styles.title}>Community & Events</Text>
         <Text style={styles.subtitle}>Join groups, participate, and earn points</Text>
-        <View style={styles.summaryRow}>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Open events</Text>
-            <Text style={styles.summaryValue}>{communityEvents.length}</Text>
-          </View>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Your badges</Text>
-            <Text style={styles.summaryValue}>{user?.badges.length ?? 0}</Text>
-          </View>
-        </View>
         {communityEvents.map(event => (
           <View key={event.id} style={styles.card}>
             <Text style={styles.name}>{event.name}</Text>
@@ -37,10 +27,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#020617', padding: 16 },
   title: { color: '#e2e8f0', fontSize: 22, fontWeight: '800' },
   subtitle: { color: '#94a3b8', marginBottom: 12 },
-  summaryRow: { flexDirection: 'row', gap: 12, marginBottom: 12 },
-  summaryCard: { flex: 1, backgroundColor: '#0b1224', borderRadius: 10, padding: 12 },
-  summaryLabel: { color: '#94a3b8' },
-  summaryValue: { color: '#e2e8f0', fontWeight: '800', fontSize: 18 },
   card: {
     backgroundColor: '#0b1224',
     padding: 14,

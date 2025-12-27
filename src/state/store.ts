@@ -4,13 +4,13 @@ import {
   AlertItem,
   CommunityEvent,
   EcoAction,
-  EnergyUse,
   FoodOrder,
   LeaderboardEntry,
   ScanAction,
   TravelLog,
   UserProfile,
-  WasteAction
+  WasteAction,
+  EnergyUse
 } from '@/types';
 
 interface EcoSphereState {
@@ -28,7 +28,6 @@ interface EcoSphereState {
   computeEcoScore: () => number;
   addAlert: (alert: Omit<AlertItem, 'id'>) => void;
   completeEvent: (eventId: string) => void;
-  categoryTotals: () => Record<EcoAction['category'], number>;
 }
 
 const randomId = () => Math.random().toString(36).slice(2, 10);
@@ -40,37 +39,6 @@ const impactFromKg = (kg: number): EcoAction['impactLevel'] => {
 };
 
 const today = () => format(new Date(), 'yyyy-MM-dd');
-
-const deriveBadges = (actions: EcoAction[], user?: UserProfile) => {
-  const badges = new Set(user?.badges ?? []);
-  const lowImpact = actions.filter(a => a.impactLevel === 'Low').length;
-  const localBuys = actions.filter(a => 'origin' in a && a.origin === 'local').length;
-  const composted = actions.filter(a => 'disposal' in a && a.disposal === 'composted').length;
-  const carAlternatives = actions.filter(a => 'method' in a && a.method !== 'car').length;
-  if (lowImpact >= 8) badges.add('Eco Hero');
-  if (localBuys >= 3) badges.add('Local Shopper');
-  if (composted >= 3) badges.add('Zero Waste');
-  if (carAlternatives >= 5) badges.add('Transit Champ');
-  return Array.from(badges);
-};
-
-const computeEcoScoreFromActions = (actions: EcoAction[]) => {
-  const scoreFromActions = actions.reduce((sum, action) => {
-    const multiplier = action.impactLevel === 'Low' ? 35 : action.impactLevel === 'Medium' ? 18 : -25;
-    return sum + multiplier;
-  }, 620);
-  return Math.max(scoreFromActions, 0);
-};
-
-const withUpdatedProfile = (state: EcoSphereState, actions: EcoAction[]) => {
-  if (!state.user) return null;
-  const ecoScore = computeEcoScoreFromActions(actions);
-  return {
-    ...state.user,
-    ecoScore,
-    badges: deriveBadges(actions, state.user)
-  };
-};
 
 const initialLeaderboard: LeaderboardEntry[] = [
   { name: 'Ava Green', ecoScore: 860, city: 'Portland' },
@@ -153,8 +121,8 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
       }
     }),
   addScanAction: payload =>
-    set(state => {
-      const ecoActions = [
+    set(state => ({
+      ecoActions: [
         {
           ...payload,
           id: randomId(),
@@ -163,24 +131,20 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
           impactLevel: impactFromKg(payload.impactKg)
         },
         ...state.ecoActions
-      ];
-      return {
-        ecoActions,
-        user: withUpdatedProfile(state, ecoActions),
-        alerts: [
-          {
-            id: randomId(),
-            message: `Expiry predicted in ${payload.expiryPredictionDays} days for ${payload.title}`,
-            category: 'EcoCycle',
-            severity: payload.expiryPredictionDays <= 3 ? 'High' : 'Medium'
-          },
-          ...state.alerts
-        ]
-      };
-    }),
+      ],
+      alerts: [
+        {
+          id: randomId(),
+          message: `Expiry predicted in ${payload.expiryPredictionDays} days for ${payload.title}`,
+          category: 'EcoCycle',
+          severity: payload.expiryPredictionDays <= 3 ? 'High' : 'Medium'
+        },
+        ...state.alerts
+      ]
+    })),
   logTravel: payload =>
-    set(state => {
-      const ecoActions = [
+    set(state => ({
+      ecoActions: [
         {
           ...payload,
           id: randomId(),
@@ -189,19 +153,15 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
           impactLevel: impactFromKg(payload.impactKg)
         },
         ...state.ecoActions
-      ];
-      return {
-        ecoActions,
-        user: withUpdatedProfile(state, ecoActions),
-        alerts: [
-          { id: randomId(), message: `${payload.method} saved ${payload.savingsKg.toFixed(1)}kg CO₂.`, category: 'EcoMiles', severity: 'Low' },
-          ...state.alerts
-        ]
-      };
-    }),
+      ],
+      alerts: [
+        { id: randomId(), message: `${payload.method} saved ${payload.savingsKg.toFixed(1)}kg CO₂.`, category: 'EcoMiles', severity: 'Low' },
+        ...state.alerts
+      ]
+    })),
   logEnergyUse: payload =>
-    set(state => {
-      const ecoActions = [
+    set(state => ({
+      ecoActions: [
         {
           ...payload,
           id: randomId(),
@@ -210,19 +170,15 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
           impactLevel: impactFromKg(payload.impactKg)
         },
         ...state.ecoActions
-      ];
-      return {
-        ecoActions,
-        user: withUpdatedProfile(state, ecoActions),
-        alerts: [
-          { id: randomId(), message: `Reduce ${payload.appliance} runtime to save more energy.`, category: 'EcoWatt', severity: 'Medium' },
-          ...state.alerts
-        ]
-      };
-    }),
+      ],
+      alerts: [
+        { id: randomId(), message: `Reduce ${payload.appliance} runtime to save more energy.`, category: 'EcoWatt', severity: 'Medium' },
+        ...state.alerts
+      ]
+    })),
   logFoodOrder: payload =>
-    set(state => {
-      const ecoActions = [
+    set(state => ({
+      ecoActions: [
         {
           ...payload,
           id: randomId(),
@@ -231,19 +187,15 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
           impactLevel: impactFromKg(payload.impactKg)
         },
         ...state.ecoActions
-      ];
-      return {
-        ecoActions,
-        user: withUpdatedProfile(state, ecoActions),
-        alerts: [
-          { id: randomId(), message: `${payload.title} packaged in ${payload.packagingType}. Consider ${payload.alternative ?? 'reusable containers'}.`, category: 'EcoPlate', severity: 'Medium' },
-          ...state.alerts
-        ]
-      };
-    }),
+      ],
+      alerts: [
+        { id: randomId(), message: `${payload.title} packaged in ${payload.packagingType}. Consider ${payload.alternative ?? 'reusable containers'}.`, category: 'EcoPlate', severity: 'Medium' },
+        ...state.alerts
+      ]
+    })),
   logWasteAction: payload =>
-    set(state => {
-      const ecoActions = [
+    set(state => ({
+      ecoActions: [
         {
           ...payload,
           id: randomId(),
@@ -252,17 +204,20 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
           impactLevel: impactFromKg(payload.impactKg)
         },
         ...state.ecoActions
-      ];
-      return {
-        ecoActions,
-        user: withUpdatedProfile(state, ecoActions),
-        alerts: [
-          { id: randomId(), message: `${payload.disposal} logged for ${payload.title}.`, category: 'EcoCycle', severity: payload.disposal === 'landfill' ? 'High' : 'Low' },
-          ...state.alerts
-        ]
-      };
-    }),
-  computeEcoScore: () => computeEcoScoreFromActions(get().ecoActions),
+      ],
+      alerts: [
+        { id: randomId(), message: `${payload.disposal} logged for ${payload.title}.`, category: 'EcoCycle', severity: payload.disposal === 'landfill' ? 'High' : 'Low' },
+        ...state.alerts
+      ]
+    })),
+  computeEcoScore: () => {
+    const { ecoActions } = get();
+    const scoreFromActions = ecoActions.reduce((sum, action) => {
+      const multiplier = action.impactLevel === 'Low' ? 30 : action.impactLevel === 'Medium' ? 15 : -20;
+      return sum + multiplier;
+    }, 600);
+    return Math.max(scoreFromActions, 0);
+  },
   addAlert: alert => set(state => ({ alerts: [{ ...alert, id: randomId() }, ...state.alerts] })),
   completeEvent: eventId =>
     set(state => {
@@ -274,12 +229,5 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
           ? { ...state.user, ecoScore: currentScore + (event?.points ?? 0), badges: [...state.user.badges, 'Community Builder'] }
           : null
       };
-    }),
-  categoryTotals: () => {
-    const totals: Record<EcoAction['category'], number> = { food: 0, travel: 0, energy: 0, waste: 0 };
-    get().ecoActions.forEach(action => {
-      totals[action.category] += action.impactKg;
-    });
-    return totals;
-  }
+    })
 }));

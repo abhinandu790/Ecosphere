@@ -7,17 +7,15 @@ import AlertList from '@/components/AlertList';
 import { SectionHeader } from '@/components/SectionHeader';
 
 export const DashboardScreen: React.FC = () => {
-  const { user, ecoActions, alerts, leaderboard, communityEvents, computeEcoScore, categoryTotals } = useEcoSphereStore();
+  const { user, ecoActions, alerts, leaderboard, communityEvents, computeEcoScore } = useEcoSphereStore();
   const ecoScore = user?.ecoScore ?? computeEcoScore();
   const completedLowImpact = ecoActions.filter(a => a.impactLevel === 'Low').length;
   const highImpactCount = ecoActions.filter(a => a.impactLevel === 'High').length;
-  const totals = categoryTotals();
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Text style={styles.welcome}>Welcome back, {user?.name ?? 'Explorer'} 👋</Text>
-        <Text style={styles.caption}>Role: {user?.role ?? 'user'} • Streak: {user?.streak ?? 0} days</Text>
         <View style={styles.row}>
           <StatCard label="EcoScore" value={`${ecoScore}`} sublabel="Dynamic carbon score" />
           <StatCard label="Badges" value={`${user?.badges.length ?? 1}`} sublabel={(user?.badges ?? ['Local Shopper']).join(', ')} tone="success" />
@@ -26,17 +24,6 @@ export const DashboardScreen: React.FC = () => {
           <StatCard label="Low impact" value={`${completedLowImpact}`} sublabel="This week" />
           <StatCard label="High impact" value={`${highImpactCount}`} sublabel="Action needed" tone="warning" />
         </View>
-
-        <ModuleCard title="Category impact" description="Food, travel, energy, waste balance">
-          <View style={styles.row}>
-            <StatCard label="Food" value={`${totals.food.toFixed(1)}kg`} sublabel="EcoScan + EcoPlate" />
-            <StatCard label="Travel" value={`${totals.travel.toFixed(1)}kg`} sublabel="EcoMiles" />
-          </View>
-          <View style={[styles.row, { marginTop: 8 }]}>
-            <StatCard label="Energy" value={`${totals.energy.toFixed(1)}kg`} sublabel="EcoWatt" />
-            <StatCard label="Waste" value={`${totals.waste.toFixed(1)}kg`} sublabel="EcoCycle" />
-          </View>
-        </ModuleCard>
 
         <ModuleCard title="Eco Alerts & Nudges" description="Smart reminders across expiry, travel, waste, and energy usage.">
           <AlertList alerts={alerts} />
@@ -77,10 +64,6 @@ const styles = StyleSheet.create({
     color: '#e2e8f0',
     fontSize: 22,
     fontWeight: '800',
-    marginBottom: 12
-  },
-  caption: {
-    color: '#94a3b8',
     marginBottom: 12
   },
   row: {

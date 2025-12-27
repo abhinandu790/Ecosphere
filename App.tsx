@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
-import { useEcoSphereStore } from '@/state/store';
 import DashboardScreen from './src/screens/DashboardScreen';
 import EcoScanScreen from './src/screens/EcoScanScreen';
 import EcoCartScreen from './src/screens/EcoCartScreen';
@@ -38,7 +37,7 @@ const AppTabs = () => (
 );
 
 export default function App() {
-  const user = useEcoSphereStore(state => state.user);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <NavigationContainer
@@ -48,7 +47,13 @@ export default function App() {
       }}
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!user ? <Stack.Screen name="Login" component={LoginScreen} /> : <Stack.Screen name="Home" component={AppTabs} />}
+        {!isAuthenticated ? (
+          <Stack.Screen name="Login">
+            {props => <LoginScreen {...props} onAuthenticated={() => setIsAuthenticated(true)} />}
+          </Stack.Screen>
+        ) : (
+          <Stack.Screen name="Home" component={AppTabs} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
