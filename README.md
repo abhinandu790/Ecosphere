@@ -90,48 +90,18 @@ If you need supplementary materials (short one-line prompt, database schema, API
 
 This repository now includes a React Native (Expo) mobile application that implements the modules described above:
 
-- **Authentication:** email sign-in with role toggle; eco profile tracks streak, badges, and ecoScore that updates when actions are logged.
-- **EcoScan:** capture scanned items with packaging/origin chips, receipt reference, expiry prediction, and carbon impact; barcode/QR capture via Expo Barcode Scanner; writes to EcoCart and generates reminders.
-- **EcoCart:** impact timeline with category filters, severity breakdown, and per-category totals across food, travel, energy, and waste.
-- **EcoMiles:** transport logger with pre-set modes, distance-based CO₂ math, savings vs. car, and recent travel history.
-- **EcoWatt:** appliance presets, runtime inputs, automatic carbon estimation, tailored tips, and history for energy actions.
-- **EcoPlate:** delivery/food tracker with packaging type chips, delivery distance impact math, alternatives, and history.
-- **EcoCycle:** waste management with disposal/reminder chips, penalty-aware logging, mix breakdown, and timeline view.
-- **EcoScore & Rewards:** dynamic ecoScore calculation, badge derivation (Zero Waste, Local Shopper, Eco Hero, Transit Champ), leaderboard, and streak handling inside the state store.
-- **Community & Events:** event listing with completion actions to earn points and badges plus a snapshot of open events and badge count.
-- **Alerts & Nudges:** consolidated alert feed with severity levels covering expiry, travel savings, and eco-tips.
+- **Authentication:** simple email-based sign-in with role toggle and JWT-ready flow placeholder.
+- **EcoScan:** form to add scanned items with packaging/origin, expiry prediction, and carbon impact; writes to EcoCart and creates alerts.
+- **EcoCart:** timeline of all eco actions with impact categories and badges for low/medium/high impact.
+- **EcoMiles:** travel logger with distance-based CO₂ impact and savings vs. car.
+- **EcoWatt:** appliance usage logger with carbon estimates and reduction suggestions.
+- **EcoPlate:** delivery/food impact tracker with packaging types, delivery distance, and greener alternatives.
+- **EcoCycle:** waste management with reminders, disposal options, penalties, and timeline.
+- **EcoScore & Rewards:** dynamic ecoScore calculation, badges, leaderboard, and streak handling inside the state store.
+- **Community & Events:** event listing and completion to earn points and badges.
+- **Alerts & Nudges:** consolidated alert feed with severity levels.
 
-### Tech stack alignment
-- **Frontend:** Expo React Native with React Navigation, Zustand state, Expo Barcode Scanner for device captures.
-- **Backend:** Django + DRF with JWT auth, PostgreSQL (Insforge-ready), Cloudflare R2 for receipts/media, Cloudflare Workers/API gateway edge, Celery + Cloudflare Cron for reminders and scoring, Requestly/Kiro for debugging, and hosting via DigitalOcean or Railway.
-
-### Backend implementation (Django + DRF)
-
-- **Auth:** JWT via `djangorestframework-simplejwt` with register/login/refresh and profile update endpoints.
-- **Eco actions:** `EcoAction` model captures category, carbon footprint, savings, packaging, origin, disposal, expiry, receipts, and reminders. Badge derivation and ecoScore updates occur on create.
-- **Reminders & alerts:** `Reminder` model links to actions with severity and delivery flags to power expiry and nudge flows.
-- **Impact & score:** `/api/impact/` returns totals, category breakdown, severity counts, active reminders, and awarded badges.
-- **Community:** `CommunityEvent` model with join/complete actions, host/participant tracking, points, and leaderboard feed via `/api/leaderboard/`.
-
-### API surface (authenticated unless noted)
-- `POST /api/auth/register/` (open) – create an account with role selection.
-- `POST /api/auth/login/` & `POST /api/auth/refresh/` – obtain/refresh JWT tokens.
-- `GET/PATCH /api/auth/profile/` – fetch or update profile meta/badges.
-- `GET/POST /api/actions/` – list or log EcoScan/EcoCart/EcoMiles/EcoWatt/EcoPlate/EcoCycle actions.
-- `GET/POST /api/reminders/` – manage expiry and nudge reminders.
-- `GET /api/impact/` – totals, breakdown, severity, badges, reminders.
-- `GET/POST /api/events/` & `POST /api/events/{id}/join/` & `POST /api/events/{id}/complete/` – community participation and rewards.
-- `GET /api/leaderboard/` – top eco performers.
-
-### Running the backend locally
-1. `cd backend`
-2. `python -m venv .venv && source .venv/bin/activate`
-3. `pip install -r requirements.txt`
-4. Copy `.env.example` to `.env` and update Postgres/R2/Redis credentials (Insforge-ready).
-5. `python manage.py migrate`
-6. `python manage.py runserver 0.0.0.0:8000`
-
-### Running the mobile app
+### Getting started
 1. Install dependencies: `npm install`
 2. Run the app with Expo: `npm start` (or `npm run android` / `npm run ios` / `npm run web`).
 

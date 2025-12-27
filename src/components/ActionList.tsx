@@ -24,10 +24,7 @@ export const ActionList: React.FC<Props> = ({ actions }) => (
           {'method' in item && <Text style={styles.meta}>Method: {item.method} • {item.distanceKm ?? ''} km</Text>}
           {'appliance' in item && <Text style={styles.meta}>Appliance: {item.appliance} • {item.hoursUsed}h</Text>}
           {'packaging' in item && <Text style={styles.meta}>Packaging: {item.packaging} • {item.origin}</Text>}
-          {'receiptUrl' in item && item.receiptUrl && <Text style={styles.meta}>Receipt: {item.receiptUrl}</Text>}
-          {'packagingType' in item && <Text style={styles.meta}>Packaging: {item.packagingType} • {item.deliveryDistanceKm} km</Text>}
           {'disposal' in item && <Text style={styles.meta}>Disposal: {item.disposal} • Reminder: {item.reminder}</Text>}
-          {'alternative' in item && item.alternative && <Text style={styles.meta}>Alternative: {item.alternative}</Text>}
         </View>
         <View style={[styles.badge, { backgroundColor: badgeColor[item.impactLevel] }]}>
           <Text style={styles.badgeText}>{item.impactLevel}</Text>

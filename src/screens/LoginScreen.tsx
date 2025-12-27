@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useEcoSphereStore } from '@/state/store';
 
-export const LoginScreen: React.FC = () => {
+interface Props {
+  onAuthenticated: () => void;
+}
+
+export const LoginScreen: React.FC<Props> = ({ onAuthenticated }) => {
   const login = useEcoSphereStore(state => state.login);
   const [email, setEmail] = useState('user@ecospherex.app');
   const [role, setRole] = useState<'user' | 'admin'>('user');
@@ -13,6 +17,7 @@ export const LoginScreen: React.FC = () => {
       return;
     }
     login(email, role);
+    onAuthenticated();
   };
 
   return (
