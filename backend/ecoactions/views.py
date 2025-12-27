@@ -1,10 +1,5 @@
-import uuid
-
-import boto3
-from django.conf import settings
 from django.db.models import Count, Sum
-from rest_framework import permissions, status, viewsets
-from rest_framework.parsers import MultiPartParser
+from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -55,31 +50,3 @@ class ImpactSummaryView(APIView):
             'reminders': ReminderSerializer(reminders, many=True).data,
         }
         return Response(data)
-
-
-class ReceiptUploadView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    parser_classes = [MultiPartParser]
-
-    def post(self, request, *args, **kwargs):
-        file_obj = request.data.get('file')
-        if not file_obj:
-            return Response({'detail': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
-
-        client = boto3.client(
-            's3',
-            endpoint_url=settings.CLOUDFLARE_R2_ENDPOINT or None,
-            aws_access_key_id=settings.CLOUDFLARE_R2_ACCESS_KEY,
-            aws_secret_access_key=settings.CLOUDFLARE_R2_SECRET_KEY,
-        )
-
-        key = f"receipts/{request.user.id}/{uuid.uuid4()}-{file_obj.name}"
-        client.upload_fileobj(
-            file_obj,
-            settings.CLOUDFLARE_R2_BUCKET,
-            key,
-            ExtraArgs={'ACL': 'public-read', 'ContentType': getattr(file_obj, 'content_type', 'application/octet-stream')},
-        )
-
-        public_url = f"{settings.CLOUDFLARE_R2_ENDPOINT}/{settings.CLOUDFLARE_R2_BUCKET}/{key}" if settings.CLOUDFLARE_R2_ENDPOINT else key
-        return Response({'url': public_url, 'key': key})
