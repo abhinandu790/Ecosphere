@@ -14,9 +14,12 @@ export const EcoScanScreen: React.FC = () => {
   const [impactKg, setImpactKg] = useState('1.2');
   const [expiryPredictionDays, setExpiryPredictionDays] = useState('5');
   const [receiptLink, setReceiptLink] = useState('');
+  const [receiptSnippet, setReceiptSnippet] = useState('');
+  const [receiptVerified, setReceiptVerified] = useState<boolean | null>(null);
   const [uploading, setUploading] = useState(false);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scannerActive, setScannerActive] = useState(false);
+  const [scanMessage, setScanMessage] = useState('Align the barcode/QR within the frame');
 
   useEffect(() => {
     BarCodeScanner.requestPermissionsAsync().then((permission: { status: string }) =>
@@ -26,6 +29,7 @@ export const EcoScanScreen: React.FC = () => {
 
   const onBarCodeScanned = ({ data }: { data: string }) => {
     setBarcode(data);
+    setScanMessage(`Captured code: ${data.substring(0, 24)}${data.length > 24 ? '…' : ''}`);
     setScannerActive(false);
   };
 
@@ -51,6 +55,10 @@ export const EcoScanScreen: React.FC = () => {
     try {
       const uploaded = await uploadApi.receipt({ uri: file.uri, name: file.name || 'receipt', type: file.mimeType || 'application/octet-stream' });
       setReceiptLink(uploaded.url || uploaded.key);
+      if (uploaded.text_snippet) {
+        setReceiptSnippet(uploaded.text_snippet);
+        setReceiptVerified(Boolean(uploaded.verified));
+      }
     } finally {
       setUploading(false);
     }
@@ -73,7 +81,10 @@ export const EcoScanScreen: React.FC = () => {
           {scannerActive ? (
             <BarCodeScanner onBarCodeScanned={onBarCodeScanned} style={styles.scanner} />
           ) : (
-            <Button title="Open scanner" onPress={() => setScannerActive(true)} />
+            <>
+              <Text style={styles.helper}>{scanMessage}</Text>
+              <Button title="Open scanner" onPress={() => setScannerActive(true)} />
+            </>
           )}
         </View>
       )}
@@ -98,8 +109,17 @@ export const EcoScanScreen: React.FC = () => {
       <TextInput style={styles.input} placeholder="Expiry prediction (days)" placeholderTextColor="#cbd5e1" value={expiryPredictionDays} onChangeText={setExpiryPredictionDays} keyboardType="number-pad" />
       <View style={styles.uploadRow}>
         <Button title={uploading ? 'Uploading…' : 'Attach receipt'} onPress={handlePickReceipt} disabled={uploading} />
-        {receiptLink ? <Text style={styles.receiptText}>Uploaded</Text> : null}
+        {receiptLink ? <Text style={styles.receiptText}>{receiptVerified ? 'Verified' : 'Uploaded'}</Text> : null}
       </View>
+      {receiptSnippet ? (
+        <View style={styles.receiptPreview}>
+          <Text style={styles.previewTitle}>Receipt text</Text>
+          <Text style={styles.previewBody}>{receiptSnippet}</Text>
+          <Text style={[styles.previewStatus, receiptVerified ? styles.statusGood : styles.statusWarn]}>
+            {receiptVerified ? 'Total detected' : 'Could not find a total — please double-check'}
+          </Text>
+        </View>
+      ) : null}
       <Button title="Add to EcoCart" onPress={handleScan} />
     </SafeAreaView>
   );
@@ -134,8 +154,15 @@ const styles = StyleSheet.create({
   chipActive: { backgroundColor: '#1d4ed8' },
   chipText: { color: '#e2e8f0', textTransform: 'capitalize' },
   warning: { color: '#fbbf24', marginBottom: 8 },
+  helper: { color: '#94a3b8', textAlign: 'center', marginBottom: 8 },
   uploadRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 8 },
-  receiptText: { color: '#22d3ee' }
+  receiptText: { color: '#22d3ee' },
+  receiptPreview: { backgroundColor: '#0b1224', borderRadius: 10, padding: 12, marginBottom: 10 },
+  previewTitle: { color: '#e2e8f0', fontWeight: '700', marginBottom: 6 },
+  previewBody: { color: '#cbd5e1', marginBottom: 6 },
+  previewStatus: { fontWeight: '700' },
+  statusGood: { color: '#22c55e' },
+  statusWarn: { color: '#f97316' }
 });
 
 export default EcoScanScreen;

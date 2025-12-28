@@ -3,7 +3,7 @@ import { Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-
 import { useEcoSphereStore } from '@/state/store';
 
 export const CommunityScreen: React.FC = () => {
-  const { communityEvents, completeEvent, user } = useEcoSphereStore();
+  const { communityEvents, completeEvent, user, leaderboard } = useEcoSphereStore();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -19,6 +19,18 @@ export const CommunityScreen: React.FC = () => {
             <Text style={styles.summaryLabel}>Your badges</Text>
             <Text style={styles.summaryValue}>{user?.badges.length ?? 0}</Text>
           </View>
+        </View>
+        <View style={styles.leaderboard}>
+          <Text style={styles.sectionTitle}>Leaderboard</Text>
+          {leaderboard.map(entry => (
+            <View key={`${entry.name}-${entry.ecoScore}`} style={styles.leaderRow}>
+              <View>
+                <Text style={styles.name}>{entry.name}</Text>
+                <Text style={styles.meta}>{entry.city}</Text>
+              </View>
+              <Text style={styles.points}>{entry.ecoScore}</Text>
+            </View>
+          ))}
         </View>
         {communityEvents.map(event => (
           <View key={event.id} style={styles.card}>
@@ -41,6 +53,14 @@ const styles = StyleSheet.create({
   summaryCard: { flex: 1, backgroundColor: '#0b1224', borderRadius: 10, padding: 12 },
   summaryLabel: { color: '#94a3b8' },
   summaryValue: { color: '#e2e8f0', fontWeight: '800', fontSize: 18 },
+  leaderboard: { backgroundColor: '#0b1224', borderRadius: 10, padding: 12, marginBottom: 12 },
+  sectionTitle: { color: '#e2e8f0', fontWeight: '800', marginBottom: 8, fontSize: 16 },
+  leaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 6,
+  },
   card: {
     backgroundColor: '#0b1224',
     padding: 14,
