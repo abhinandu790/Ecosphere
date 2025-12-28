@@ -30,6 +30,11 @@ export const ActionList: React.FC<Props> = ({ actions }) => (
           {'appliance' in item && <Text style={styles.meta}>Appliance: {item.appliance} • {item.hoursUsed}h</Text>}
           {'packaging' in item && <Text style={styles.meta}>Packaging: {item.packaging} • {item.origin}</Text>}
           {'receiptUrl' in item && item.receiptUrl && <Text style={styles.meta}>Receipt: {item.receiptUrl}</Text>}
+          {'receiptSnippet' in item && item.receiptSnippet && (
+            <Text style={[styles.meta, styles.receiptLine]}>
+              {item.receiptVerified ? 'Verified total:' : 'Parsed receipt:'} {item.receiptSnippet}
+            </Text>
+          )}
           {'billUrl' in item && item.billUrl && <Text style={styles.meta}>Bill: {item.billUrl}</Text>}
           {'packagingType' in item && <Text style={styles.meta}>Packaging: {item.packagingType} • {item.deliveryDistanceKm} km</Text>}
           {'disposal' in item && <Text style={styles.meta}>Disposal: {item.disposal} • Reminder: {item.reminder}</Text>}
@@ -61,6 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2
   },
+  receiptLine: { color: '#a5f3fc', fontStyle: 'italic' },
   badge: {
     minWidth: 68,
     borderRadius: 10,

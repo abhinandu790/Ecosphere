@@ -80,6 +80,9 @@ const mapAction = (apiAction: any): EcoAction => ({
   origin: apiAction.origin,
   expiryPredictionDays: apiAction.data?.expiry_prediction ?? apiAction.expiryPredictionDays,
   receiptUrl: apiAction.receipt_url ?? apiAction.receiptUrl,
+  receiptSnippet: apiAction.data?.receipt_text ?? apiAction.receiptSnippet,
+  receiptVerified: apiAction.data?.receipt_verified ?? apiAction.receiptVerified,
+  productHint: apiAction.data?.product_hint ?? apiAction.productHint,
   method: apiAction.data?.method ?? apiAction.method,
   distanceKm: apiAction.distance_km ?? apiAction.distanceKm,
   savingsKg: apiAction.estimated_savings_kg ?? apiAction.savingsKg,
@@ -232,7 +235,13 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
         ? format(new Date(Date.now() + payload.expiryPredictionDays * 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
         : null,
       receipt_url: payload.receiptUrl,
-      data: { barcode: payload.barcode, expiry_prediction: payload.expiryPredictionDays },
+      data: {
+        barcode: payload.barcode,
+        expiry_prediction: payload.expiryPredictionDays,
+        receipt_text: payload.receiptSnippet,
+        receipt_verified: payload.receiptVerified,
+        product_hint: payload.productHint,
+      },
       severity: impactFromKg(payload.impactKg).toLowerCase(),
     };
     try {
