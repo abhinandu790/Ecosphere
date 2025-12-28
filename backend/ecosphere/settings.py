@@ -59,8 +59,13 @@ ASGI_APPLICATION = 'ecosphere.asgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgres://postgres:postgres@localhost:5432/ecosphere'),
+        default=os.environ.get(
+            'DATABASE_URL',
+            'postgres://postgres:579eb4a662f601c461659893ccf99e21'
+            '@dgztdaj5.us-west.database.insforge.app:5432/insforge?sslmode=require',
+        ),
         conn_max_age=600,
+        ssl_require=True,
     )
 }
 

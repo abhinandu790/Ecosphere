@@ -114,7 +114,7 @@ This repository now includes a React Native (Expo) mobile application that imple
 - **Community:** `CommunityEvent` model with join/complete actions, host/participant tracking, points, and leaderboard feed via `/api/leaderboard/`.
 - **Media:** `/api/uploads/receipt/` streams files directly into Cloudflare R2 using `boto3` so receipts/bills can be stored with EcoScan and EcoWatt entries.
 - **Automation:** Celery workers (brokered by Redis) now ship with periodic beat schedules to send reminders and recompute scores/badges. Cloudflare Cron can ping these tasks in production.
-- **PostgreSQL-first:** `DATABASE_URL` points to Postgres by default and the custom user now authenticates by unique email to match the mobile login flow.
+- **PostgreSQL-first:** `DATABASE_URL` now defaults to the Insforge cluster (`dgztdaj5.us-west.database.insforge.app:5432/insforge`) with SSL required, and the custom user authenticates by unique email to match the mobile login flow.
 
 ### API surface (authenticated unless noted)
 - `POST /api/auth/register/` (open) – create an account with role selection.
@@ -137,9 +137,9 @@ This repository now includes a React Native (Expo) mobile application that imple
 7. (optional) `celery -A ecosphere worker -B --loglevel=INFO` to process reminders and score recomputation.
 
 #### Using Docker Compose for infrastructure (Postgres + Redis)
-1. From the repo root: `docker compose up -d` (brings up Postgres and Redis with persisted volumes).
-2. Export `DATABASE_URL=postgres://ecosphere:ecosphere@localhost:5432/ecosphere` and `CELERY_BROKER_URL=redis://localhost:6379/0` (matching the compose defaults).
-3. Run migrations and start the Django server + Celery worker as above; the services will bind to the compose network.
+1. From the repo root: `docker compose up -d` (brings up Postgres and Redis with persisted volumes if you prefer local services).
+2. For Insforge, export `DATABASE_URL=postgres://postgres:579eb4a662f601c461659893ccf99e21@dgztdaj5.us-west.database.insforge.app:5432/insforge?sslmode=require` and keep `CELERY_BROKER_URL=redis://localhost:6379/0` (or your managed Redis URL). SSL is required by Insforge.
+3. Run migrations and start the Django server + Celery worker as above; the services will bind to either the compose network or the Insforge/Postgres endpoint.
 
 ### Running the mobile app
 1. Install dependencies: `npm install`
