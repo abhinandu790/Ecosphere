@@ -1,27 +1,39 @@
+<<<<<<< HEAD
 import React, { useMemo, useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+=======
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+>>>>>>> main
 import { useEcoSphereStore } from '@/state/store';
 import ActionList from '@/components/ActionList';
 
 export const EcoCartScreen: React.FC = () => {
   const ecoActions = useEcoSphereStore(state => state.ecoActions);
+<<<<<<< HEAD
   const [filter, setFilter] = useState<'all' | 'food' | 'travel' | 'energy' | 'waste'>('all');
   const filtered = useMemo(
     () => (filter === 'all' ? ecoActions : ecoActions.filter(action => action.category === filter)),
     [ecoActions, filter]
   );
+=======
+>>>>>>> main
   const grouped = ecoActions.reduce<Record<string, number>>((acc, item) => {
     acc[item.category] = (acc[item.category] ?? 0) + item.impactKg;
     return acc;
   }, {});
+<<<<<<< HEAD
   const severityCounts = ecoActions.reduce(
     (acc, item) => ({ ...acc, [item.impactLevel]: acc[item.impactLevel] + 1 }),
     { Low: 0, Medium: 0, High: 0 }
   );
+=======
+>>>>>>> main
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>EcoCart Timeline</Text>
+<<<<<<< HEAD
       <Text style={styles.subtitle}>Chronological log of shopping, travel, energy, and waste</Text>
       <View style={styles.severityRow}>
         {(['Low', 'Medium', 'High'] as const).map(level => (
@@ -38,6 +50,8 @@ export const EcoCartScreen: React.FC = () => {
           </Pressable>
         ))}
       </View>
+=======
+>>>>>>> main
       <View style={styles.chips}>
         {Object.entries(grouped).map(([category, total]) => (
           <View key={category} style={styles.chip}>
@@ -46,7 +60,11 @@ export const EcoCartScreen: React.FC = () => {
           </View>
         ))}
       </View>
+<<<<<<< HEAD
       <ActionList actions={filtered} />
+=======
+      <ActionList actions={ecoActions} />
+>>>>>>> main
     </SafeAreaView>
   );
 };
@@ -63,6 +81,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginBottom: 12
   },
+<<<<<<< HEAD
   subtitle: { color: '#94a3b8', marginBottom: 10 },
   severityRow: { flexDirection: 'row', marginBottom: 8, gap: 8 },
   severityChip: { padding: 8, borderRadius: 10, flex: 1, alignItems: 'center' },
@@ -70,14 +89,19 @@ const styles = StyleSheet.create({
   severityMedium: { backgroundColor: 'rgba(234,179,8,0.2)' },
   severityHigh: { backgroundColor: 'rgba(239,68,68,0.2)' },
   severityText: { color: '#e2e8f0', fontWeight: '700' },
+=======
+>>>>>>> main
   chips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 12
   },
+<<<<<<< HEAD
   filterRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
   filterChip: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 10, backgroundColor: '#0b1224' },
   filterActive: { backgroundColor: '#1d4ed8' },
+=======
+>>>>>>> main
   chip: {
     backgroundColor: '#0b1224',
     padding: 8,

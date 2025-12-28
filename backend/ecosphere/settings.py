@@ -59,6 +59,7 @@ ASGI_APPLICATION = 'ecosphere.asgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
+<<<<<<< HEAD
         default=os.environ.get(
             'DATABASE_URL',
             'postgres://postgres:579eb4a662f601c461659893ccf99e21'
@@ -66,6 +67,10 @@ DATABASES = {
         ),
         conn_max_age=600,
         ssl_require=True,
+=======
+        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        conn_max_age=600,
+>>>>>>> main
     )
 }
 
@@ -114,6 +119,7 @@ CLOUDFLARE_R2_SECRET_KEY = os.environ.get('CLOUDFLARE_R2_SECRET_KEY', '')
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', CELERY_BROKER_URL)
+<<<<<<< HEAD
 CELERY_BEAT_SCHEDULE = {
     'send-reminders-daily': {
         'task': 'ecoactions.tasks.send_due_reminders',
@@ -124,5 +130,7 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': 60 * 60 * 12,  # twice a day
     },
 }
+=======
+>>>>>>> main
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -19,11 +19,15 @@ export interface EcoActionBase {
   category: 'food' | 'travel' | 'energy' | 'waste';
   impactKg: number;
   impactLevel: ImpactLevel;
+<<<<<<< HEAD
   receiptUrl?: string;
+=======
+>>>>>>> main
 }
 
 export interface ScanAction extends EcoActionBase {
   barcode?: string;
+<<<<<<< HEAD
   packaging?: 'plastic' | 'paper' | 'glass' | 'metal' | 'mixed';
   origin?: 'local' | 'imported';
   expiryPredictionDays?: number;
@@ -52,13 +56,41 @@ export interface EnergyUse extends EcoActionBase {
 export interface FoodOrder extends EcoActionBase {
   packagingType?: string;
   deliveryDistanceKm?: number;
+=======
+  packaging: 'plastic' | 'paper' | 'glass' | 'metal' | 'mixed';
+  origin: 'local' | 'imported';
+  expiryPredictionDays: number;
+}
+
+export interface TravelLog extends EcoActionBase {
+  method: 'walking' | 'cycling' | 'bus' | 'metro' | 'car' | 'ev';
+  distanceKm: number;
+  savingsKg: number;
+}
+
+export interface EnergyUse extends EcoActionBase {
+  appliance: string;
+  hoursUsed: number;
+  suggestion: string;
+}
+
+export interface FoodOrder extends EcoActionBase {
+  packagingType: string;
+  deliveryDistanceKm: number;
+>>>>>>> main
   alternative?: string;
 }
 
 export interface WasteAction extends EcoActionBase {
+<<<<<<< HEAD
   disposal?: 'recycled' | 'reused' | 'composted' | 'landfill';
   reminder?: '7d' | '3d' | 'expiry';
   penalty?: number;
+=======
+  disposal: 'recycled' | 'reused' | 'composted' | 'landfill';
+  reminder: '7d' | '3d' | 'expiry';
+  penalty: number;
+>>>>>>> main
 }
 
 export interface LeaderboardEntry {

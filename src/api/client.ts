@@ -7,7 +7,11 @@ export const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
+<<<<<<< HEAD
 api.interceptors.request.use(async (config: any) => {
+=======
+api.interceptors.request.use(async config => {
+>>>>>>> main
   const token = await AsyncStorage.getItem('accessToken');
   if (token) {
     config.headers = {
@@ -19,6 +23,7 @@ api.interceptors.request.use(async (config: any) => {
 });
 
 api.interceptors.response.use(
+<<<<<<< HEAD
   (response: any) => response,
   async (error: any) => {
     const refreshToken = await AsyncStorage.getItem('refreshToken');
@@ -26,6 +31,15 @@ api.interceptors.response.use(
       try {
         const refreshResp = await api.post('/api/auth/refresh/', { refresh: refreshToken });
         const newToken = refreshResp.data.access as string;
+=======
+  response => response,
+  async error => {
+    const refreshToken = await AsyncStorage.getItem('refreshToken');
+    if (error.response?.status === 401 && refreshToken) {
+      try {
+        const refreshResp = await api.post('/api/auth/refresh/', { refresh: refreshToken });
+        const newToken = refreshResp.data.access;
+>>>>>>> main
         await AsyncStorage.setItem('accessToken', newToken);
         error.config.headers = {
           ...error.config.headers,
@@ -48,7 +62,11 @@ export interface AuthTokens {
 export const authApi = {
   register: (payload: { email: string; password: string; username?: string; role?: string }) =>
     api.post('/api/auth/register/', payload),
+<<<<<<< HEAD
   login: (payload: { email: string; password: string }) => api.post('/api/auth/login/', payload),
+=======
+  login: (payload: { email: string; password: string }) => api.post<AuthTokens>('/api/auth/login/', payload),
+>>>>>>> main
   profile: () => api.get('/api/auth/profile/'),
 };
 
@@ -79,12 +97,21 @@ export const leaderboardApi = {
 export const uploadApi = {
   receipt: async (file: { uri: string; name: string; type: string }) => {
     const form = new FormData();
+<<<<<<< HEAD
     const fileEntry: any = {
       uri: file.uri,
       name: file.name,
       type: file.type,
     };
     form.append('file', fileEntry);
+=======
+    form.append('file', {
+      // @ts-expect-error react native file shape
+      uri: file.uri,
+      name: file.name,
+      type: file.type,
+    });
+>>>>>>> main
     const response = await api.post('/api/uploads/receipt/', form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });

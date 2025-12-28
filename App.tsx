@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 import React, { useEffect } from 'react';
+=======
+import React, { useState } from 'react';
+>>>>>>> main
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
+<<<<<<< HEAD
 import { useEcoSphereStore } from '@/state/store';
+=======
+>>>>>>> main
 import DashboardScreen from './src/screens/DashboardScreen';
 import EcoScanScreen from './src/screens/EcoScanScreen';
 import EcoCartScreen from './src/screens/EcoCartScreen';
@@ -38,12 +45,16 @@ const AppTabs = () => (
 );
 
 export default function App() {
+<<<<<<< HEAD
   const user = useEcoSphereStore(state => state.user);
   const hydrateFromApi = useEcoSphereStore(state => state.hydrateFromApi);
 
   useEffect(() => {
     hydrateFromApi();
   }, [hydrateFromApi]);
+=======
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+>>>>>>> main
 
   return (
     <NavigationContainer
@@ -53,7 +64,17 @@ export default function App() {
       }}
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+<<<<<<< HEAD
         {!user ? <Stack.Screen name="Login" component={LoginScreen} /> : <Stack.Screen name="Home" component={AppTabs} />}
+=======
+        {!isAuthenticated ? (
+          <Stack.Screen name="Login">
+            {props => <LoginScreen {...props} onAuthenticated={() => setIsAuthenticated(true)} />}
+          </Stack.Screen>
+        ) : (
+          <Stack.Screen name="Home" component={AppTabs} />
+        )}
+>>>>>>> main
       </Stack.Navigator>
     </NavigationContainer>
   );

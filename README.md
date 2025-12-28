@@ -90,6 +90,7 @@ If you need supplementary materials (short one-line prompt, database schema, API
 
 This repository now includes a React Native (Expo) mobile application that implements the modules described above:
 
+<<<<<<< HEAD
 - **Authentication:** email sign-in with role toggle; eco profile tracks streak, badges, and ecoScore that updates when actions are logged.
 - **EcoScan:** capture scanned items with packaging/origin chips, Cloudflare R2-backed receipt uploads, expiry prediction, and carbon impact; barcode/QR capture via Expo Barcode Scanner; writes to EcoCart and generates reminders.
 - **EcoCart:** impact timeline with category filters, severity breakdown, and per-category totals across food, travel, energy, and waste.
@@ -145,5 +146,21 @@ This repository now includes a React Native (Expo) mobile application that imple
 1. Install dependencies: `npm install`
 2. Set `EXPO_PUBLIC_API_URL=http://localhost:8000` (or your deployed API gateway) so the client calls the Django backend.
 3. Run the app with Expo: `npm start` (or `npm run android` / `npm run ios` / `npm run web`).
+=======
+- **Authentication:** simple email-based sign-in with role toggle and JWT-ready flow placeholder.
+- **EcoScan:** form to add scanned items with packaging/origin, expiry prediction, and carbon impact; writes to EcoCart and creates alerts.
+- **EcoCart:** timeline of all eco actions with impact categories and badges for low/medium/high impact.
+- **EcoMiles:** travel logger with distance-based CO₂ impact and savings vs. car.
+- **EcoWatt:** appliance usage logger with carbon estimates and reduction suggestions.
+- **EcoPlate:** delivery/food impact tracker with packaging types, delivery distance, and greener alternatives.
+- **EcoCycle:** waste management with reminders, disposal options, penalties, and timeline.
+- **EcoScore & Rewards:** dynamic ecoScore calculation, badges, leaderboard, and streak handling inside the state store.
+- **Community & Events:** event listing and completion to earn points and badges.
+- **Alerts & Nudges:** consolidated alert feed with severity levels.
+
+### Getting started
+1. Install dependencies: `npm install`
+2. Run the app with Expo: `npm start` (or `npm run android` / `npm run ios` / `npm run web`).
+>>>>>>> main
 
 > Note: Icons are placeholders; replace the files in `assets/` with your own branding.

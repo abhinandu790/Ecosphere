@@ -22,6 +22,7 @@ export const ActionList: React.FC<Props> = ({ actions }) => (
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.meta}>{item.category.toUpperCase()} • {item.date}</Text>
           {'method' in item && <Text style={styles.meta}>Method: {item.method} • {item.distanceKm ?? ''} km</Text>}
+<<<<<<< HEAD
           {'startLat' in item && item.startLat && item.endLat && (
             <Text style={styles.meta}>
               Route: {item.startLat.toFixed(3)}, {item.startLng?.toFixed(3)} → {item.endLat.toFixed(3)}, {item.endLng?.toFixed(3)}
@@ -39,6 +40,11 @@ export const ActionList: React.FC<Props> = ({ actions }) => (
           {'packagingType' in item && <Text style={styles.meta}>Packaging: {item.packagingType} • {item.deliveryDistanceKm} km</Text>}
           {'disposal' in item && <Text style={styles.meta}>Disposal: {item.disposal} • Reminder: {item.reminder}</Text>}
           {'alternative' in item && item.alternative && <Text style={styles.meta}>Alternative: {item.alternative}</Text>}
+=======
+          {'appliance' in item && <Text style={styles.meta}>Appliance: {item.appliance} • {item.hoursUsed}h</Text>}
+          {'packaging' in item && <Text style={styles.meta}>Packaging: {item.packaging} • {item.origin}</Text>}
+          {'disposal' in item && <Text style={styles.meta}>Disposal: {item.disposal} • Reminder: {item.reminder}</Text>}
+>>>>>>> main
         </View>
         <View style={[styles.badge, { backgroundColor: badgeColor[item.impactLevel] }]}>
           <Text style={styles.badgeText}>{item.impactLevel}</Text>
@@ -66,7 +72,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2
   },
+<<<<<<< HEAD
   receiptLine: { color: '#a5f3fc', fontStyle: 'italic' },
+=======
+>>>>>>> main
   badge: {
     minWidth: 68,
     borderRadius: 10,

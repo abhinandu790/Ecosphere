@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import * as Location from 'expo-location';
@@ -79,11 +80,24 @@ export const EcoMilesScreen: React.FC = () => {
     const carImpact = km * carFactor;
     return +(carImpact - computedImpact).toFixed(2);
   }, [carFactor, computedImpact, distance]);
+=======
+import React, { useState } from 'react';
+import { Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useEcoSphereStore } from '@/state/store';
+
+export const EcoMilesScreen: React.FC = () => {
+  const logTravel = useEcoSphereStore(state => state.logTravel);
+  const [method, setMethod] = useState<'walking' | 'cycling' | 'bus' | 'metro' | 'car' | 'ev'>('cycling');
+  const [distance, setDistance] = useState('3.5');
+  const [impact, setImpact] = useState('0.6');
+  const [savings, setSavings] = useState('1.2');
+>>>>>>> main
 
   const handleLog = () => {
     logTravel({
       title: `${method} ride`,
       method,
+<<<<<<< HEAD
       distanceKm: parseFloat(distance) || autoDistance || 0,
       impactKg: computedImpact,
       savingsKg: savings,
@@ -91,6 +105,11 @@ export const EcoMilesScreen: React.FC = () => {
       startLng: startCoords?.longitude,
       endLat: endCoords?.latitude,
       endLng: endCoords?.longitude,
+=======
+      distanceKm: parseFloat(distance) || 0,
+      impactKg: parseFloat(impact) || 0,
+      savingsKg: parseFloat(savings) || 0
+>>>>>>> main
     });
   };
 
@@ -98,6 +117,7 @@ export const EcoMilesScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>EcoMiles</Text>
       <Text style={styles.subtitle}>Log transportation and visualize carbon savings</Text>
+<<<<<<< HEAD
       {hasLocationPermission === false && <Text style={styles.warning}>Location permission is required for auto-distance.</Text>}
       <View style={styles.chipRow}>
         {(['walking', 'cycling', 'bus', 'metro', 'car', 'ev'] as const).map(option => (
@@ -144,6 +164,13 @@ export const EcoMilesScreen: React.FC = () => {
         <Text style={styles.historyHint}>Weekly + monthly insights auto-calc from logs</Text>
       </View>
       <ActionList actions={travelLogs} />
+=======
+      <TextInput style={styles.input} placeholder="Method" placeholderTextColor="#cbd5e1" value={method} onChangeText={text => setMethod(text as any)} />
+      <TextInput style={styles.input} placeholder="Distance (km)" placeholderTextColor="#cbd5e1" value={distance} onChangeText={setDistance} keyboardType="decimal-pad" />
+      <TextInput style={styles.input} placeholder="Impact (kg CO₂)" placeholderTextColor="#cbd5e1" value={impact} onChangeText={setImpact} keyboardType="decimal-pad" />
+      <TextInput style={styles.input} placeholder="Savings (kg CO₂ vs. car)" placeholderTextColor="#cbd5e1" value={savings} onChangeText={setSavings} keyboardType="decimal-pad" />
+      <Button title="Save trip" onPress={handleLog} />
+>>>>>>> main
     </SafeAreaView>
   );
 };
@@ -152,18 +179,22 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#020617', padding: 16 },
   title: { color: '#e2e8f0', fontSize: 22, fontWeight: '800' },
   subtitle: { color: '#94a3b8', marginBottom: 12 },
+<<<<<<< HEAD
   warning: { color: '#fbbf24', marginBottom: 8 },
   historyHint: { color: '#64748b', marginBottom: 8 },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
   chip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 10, backgroundColor: '#0b1224' },
   chipActive: { backgroundColor: '#1d4ed8' },
   chipText: { color: '#e2e8f0', textTransform: 'capitalize' },
+=======
+>>>>>>> main
   input: {
     backgroundColor: '#0b1224',
     color: '#e2e8f0',
     padding: 12,
     borderRadius: 8,
     marginBottom: 10
+<<<<<<< HEAD
   },
   summaryRow: { flexDirection: 'row', gap: 12, marginBottom: 12 },
   summaryCard: { flex: 1, backgroundColor: '#0b1224', padding: 12, borderRadius: 10 },
@@ -173,6 +204,9 @@ const styles = StyleSheet.create({
   autoDistance: { color: '#22d3ee', marginBottom: 8 },
   map: { height: 160, borderRadius: 12, marginBottom: 10 },
   historyHeader: { marginTop: 10 }
+=======
+  }
+>>>>>>> main
 });
 
 export default EcoMilesScreen;

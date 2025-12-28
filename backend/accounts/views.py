@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions
+<<<<<<< HEAD
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+=======
+>>>>>>> main
 
 from .serializers import ProfileSerializer, RegisterSerializer
 
@@ -20,6 +23,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+<<<<<<< HEAD
 
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -33,3 +37,5 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailTokenObtainPairSerializer
+=======
+>>>>>>> main

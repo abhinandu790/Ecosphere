@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useEcoSphereStore } from '@/state/store';
 
+<<<<<<< HEAD
 export const LoginScreen: React.FC = () => {
   const login = useEcoSphereStore(state => state.login);
   const register = useEcoSphereStore(state => state.register);
@@ -25,6 +26,24 @@ export const LoginScreen: React.FC = () => {
     } catch (error: any) {
       Alert.alert('Authentication failed', error?.response?.data?.detail || 'Check credentials and try again');
     }
+=======
+interface Props {
+  onAuthenticated: () => void;
+}
+
+export const LoginScreen: React.FC<Props> = ({ onAuthenticated }) => {
+  const login = useEcoSphereStore(state => state.login);
+  const [email, setEmail] = useState('user@ecospherex.app');
+  const [role, setRole] = useState<'user' | 'admin'>('user');
+
+  const handleLogin = () => {
+    if (!email.includes('@')) {
+      Alert.alert('Please enter a valid email');
+      return;
+    }
+    login(email, role);
+    onAuthenticated();
+>>>>>>> main
   };
 
   return (
@@ -39,6 +58,7 @@ export const LoginScreen: React.FC = () => {
         onChangeText={setEmail}
         autoCapitalize="none"
       />
+<<<<<<< HEAD
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -47,14 +67,20 @@ export const LoginScreen: React.FC = () => {
         secureTextEntry
         onChangeText={setPassword}
       />
+=======
+>>>>>>> main
       <View style={styles.toggleRow}>
         <Text style={styles.toggleLabel}>Role:</Text>
         <Button title={role === 'user' ? 'User' : 'Admin'} onPress={() => setRole(role === 'user' ? 'admin' : 'user')} />
       </View>
+<<<<<<< HEAD
       <View style={styles.toggleRow}>
         <Button title={`Switch to ${mode === 'login' ? 'Register' : 'Login'}`} onPress={() => setMode(mode === 'login' ? 'register' : 'login')} />
       </View>
       <Button title={loading ? 'Working...' : mode === 'login' ? 'Login' : 'Create account'} onPress={handleAuth} />
+=======
+      <Button title="Continue" onPress={handleLogin} />
+>>>>>>> main
     </SafeAreaView>
   );
 };

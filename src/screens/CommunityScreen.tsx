@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useMemo } from 'react';
 import { Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useEcoSphereStore } from '@/state/store';
@@ -61,6 +62,20 @@ export const CommunityScreen: React.FC = () => {
         </View>
 
         <Text style={styles.sectionTitle}>Open events</Text>
+=======
+import React from 'react';
+import { Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEcoSphereStore } from '@/state/store';
+
+export const CommunityScreen: React.FC = () => {
+  const { communityEvents, completeEvent } = useEcoSphereStore();
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <Text style={styles.title}>Community & Events</Text>
+        <Text style={styles.subtitle}>Join groups, participate, and earn points</Text>
+>>>>>>> main
         {communityEvents.map(event => (
           <View key={event.id} style={styles.card}>
             <Text style={styles.name}>{event.name}</Text>
@@ -75,6 +90,7 @@ export const CommunityScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   container: { flex: 1, backgroundColor: '#020617' },
   scroll: { padding: 16, paddingBottom: 24 },
   hero: {
@@ -113,6 +129,17 @@ const styles = StyleSheet.create({
   medal: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   medalText: { color: '#0b1224', fontWeight: '800' },
   card: { backgroundColor: '#0b1224', padding: 14, borderRadius: 12, marginBottom: 10, borderWidth: 1, borderColor: '#1e293b' },
+=======
+  container: { flex: 1, backgroundColor: '#020617', padding: 16 },
+  title: { color: '#e2e8f0', fontSize: 22, fontWeight: '800' },
+  subtitle: { color: '#94a3b8', marginBottom: 12 },
+  card: {
+    backgroundColor: '#0b1224',
+    padding: 14,
+    borderRadius: 10,
+    marginBottom: 10
+  },
+>>>>>>> main
   name: { color: '#e2e8f0', fontWeight: '700', fontSize: 16 },
   meta: { color: '#94a3b8' },
   points: { color: '#22c55e', fontWeight: '800', marginBottom: 6 }

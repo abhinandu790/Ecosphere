@@ -3,7 +3,10 @@ from datetime import date
 from celery import shared_task
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
+<<<<<<< HEAD
 from django.core.mail import send_mail
+=======
+>>>>>>> main
 
 from .models import EcoAction, Reminder
 
@@ -14,6 +17,7 @@ User = get_user_model()
 def send_due_reminders():
     today = date.today()
     reminders = Reminder.objects.filter(due_date__lte=today, delivered=False)
+<<<<<<< HEAD
     delivered_count = 0
 
     for reminder in reminders.select_related('user', 'action'):
@@ -36,6 +40,10 @@ def send_due_reminders():
         delivered_count += 1
 
     return f"Delivered {delivered_count} reminders with notifications"
+=======
+    delivered_count = reminders.update(delivered=True)
+    return f"Delivered {delivered_count} reminders"
+>>>>>>> main
 
 
 @shared_task

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import io
 import re
 import uuid
@@ -8,6 +9,10 @@ from django.conf import settings
 from django.db.models import Count, Sum
 from rest_framework import permissions, status, viewsets
 from rest_framework.parsers import MultiPartParser
+=======
+from django.db.models import Count, Sum
+from rest_framework import permissions, viewsets
+>>>>>>> main
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -58,6 +63,7 @@ class ImpactSummaryView(APIView):
             'reminders': ReminderSerializer(reminders, many=True).data,
         }
         return Response(data)
+<<<<<<< HEAD
 
 
 class ReceiptUploadView(APIView):
@@ -121,3 +127,5 @@ class ReceiptUploadView(APIView):
             'text_snippet': extracted_text,
             'verified': bool(verified_match),
         })
+=======
+>>>>>>> main

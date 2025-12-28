@@ -7,17 +7,27 @@ import AlertList from '@/components/AlertList';
 import { SectionHeader } from '@/components/SectionHeader';
 
 export const DashboardScreen: React.FC = () => {
+<<<<<<< HEAD
   const { user, ecoActions, alerts, leaderboard, communityEvents, computeEcoScore, categoryTotals } = useEcoSphereStore();
   const ecoScore = user?.ecoScore ?? computeEcoScore();
   const completedLowImpact = ecoActions.filter(a => a.impactLevel === 'Low').length;
   const highImpactCount = ecoActions.filter(a => a.impactLevel === 'High').length;
   const totals = categoryTotals();
+=======
+  const { user, ecoActions, alerts, leaderboard, communityEvents, computeEcoScore } = useEcoSphereStore();
+  const ecoScore = user?.ecoScore ?? computeEcoScore();
+  const completedLowImpact = ecoActions.filter(a => a.impactLevel === 'Low').length;
+  const highImpactCount = ecoActions.filter(a => a.impactLevel === 'High').length;
+>>>>>>> main
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Text style={styles.welcome}>Welcome back, {user?.name ?? 'Explorer'} 👋</Text>
+<<<<<<< HEAD
         <Text style={styles.caption}>Role: {user?.role ?? 'user'} • Streak: {user?.streak ?? 0} days</Text>
+=======
+>>>>>>> main
         <View style={styles.row}>
           <StatCard label="EcoScore" value={`${ecoScore}`} sublabel="Dynamic carbon score" />
           <StatCard label="Badges" value={`${user?.badges.length ?? 1}`} sublabel={(user?.badges ?? ['Local Shopper']).join(', ')} tone="success" />
@@ -27,6 +37,7 @@ export const DashboardScreen: React.FC = () => {
           <StatCard label="High impact" value={`${highImpactCount}`} sublabel="Action needed" tone="warning" />
         </View>
 
+<<<<<<< HEAD
         <ModuleCard title="Category impact" description="Food, travel, energy, waste balance">
           <View style={styles.row}>
             <StatCard label="Food" value={`${totals.food.toFixed(1)}kg`} sublabel="EcoScan + EcoPlate" />
@@ -38,6 +49,8 @@ export const DashboardScreen: React.FC = () => {
           </View>
         </ModuleCard>
 
+=======
+>>>>>>> main
         <ModuleCard title="Eco Alerts & Nudges" description="Smart reminders across expiry, travel, waste, and energy usage.">
           <AlertList alerts={alerts} />
         </ModuleCard>
@@ -79,10 +92,13 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginBottom: 12
   },
+<<<<<<< HEAD
   caption: {
     color: '#94a3b8',
     marginBottom: 12
   },
+=======
+>>>>>>> main
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between'
