@@ -3,6 +3,10 @@ from datetime import date
 from celery import shared_task
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
+<<<<<<< HEAD
+from django.core.mail import send_mail
+=======
+>>>>>>> main
 
 from .models import EcoAction, Reminder
 
@@ -13,8 +17,33 @@ User = get_user_model()
 def send_due_reminders():
     today = date.today()
     reminders = Reminder.objects.filter(due_date__lte=today, delivered=False)
+<<<<<<< HEAD
+    delivered_count = 0
+
+    for reminder in reminders.select_related('user', 'action'):
+        user_email = reminder.user.email
+        subject = f"EcoSphere reminder: {reminder.action.action_type} due soon"
+        message = (
+            f"Hi {reminder.user.username or reminder.user.email},\n\n"
+            f"This is your EcoSphere reminder for {reminder.action.action_type}.\n"
+            f"Due date: {reminder.due_date}\n"
+            f"Impact: {reminder.action.carbon_kg} kg CO₂e (severity: {reminder.severity}).\n\n"
+            "Log disposal, upload a receipt, or mark as reused/composted to protect your EcoScore.\n\n"
+            "— EcoSphere automations"
+        )
+
+        if user_email:
+            send_mail(subject, message, None, [user_email], fail_silently=True)
+
+        reminder.delivered = True
+        reminder.save(update_fields=['delivered'])
+        delivered_count += 1
+
+    return f"Delivered {delivered_count} reminders with notifications"
+=======
     delivered_count = reminders.update(delivered=True)
     return f"Delivered {delivered_count} reminders"
+>>>>>>> main
 
 
 @shared_task

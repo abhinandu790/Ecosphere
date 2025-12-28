@@ -16,5 +16,12 @@ class CustomUser(AbstractUser):
     streak_days = models.PositiveIntegerField(default=0)
     profile_meta = models.JSONField(default=dict, blank=True)
 
+<<<<<<< HEAD
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+    email = models.EmailField(unique=True)
+
+=======
+>>>>>>> main
     def __str__(self):
         return f"{self.username} ({self.role})"
