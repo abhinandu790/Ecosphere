@@ -2,17 +2,21 @@ import React, { useMemo, useState } from 'react';
 import { Button, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useEcoSphereStore } from '@/state/store';
 import ActionList from '@/components/ActionList';
+import { WasteAction } from '@/types';
 
 export const EcoCycleScreen: React.FC = () => {
   const { ecoActions, logWasteAction } = useEcoSphereStore();
-  const wasteActions = useMemo(() => ecoActions.filter(a => a.category === 'waste'), [ecoActions]);
+  const wasteActions = useMemo(
+    () => ecoActions.filter((a): a is WasteAction => a.category === 'waste'),
+    [ecoActions]
+  );
   const [title, setTitle] = useState('Glass jar');
   const [disposal, setDisposal] = useState<'recycled' | 'reused' | 'composted' | 'landfill'>('reused');
   const [impact, setImpact] = useState('0.3');
   const [reminder, setReminder] = useState<'7d' | '3d' | 'expiry'>('7d');
 
   const disposalMix = wasteActions.reduce(
-    (acc, action) => ({ ...acc, [action.disposal]: (acc[action.disposal] ?? 0) + 1 }),
+    (acc, action) => ({ ...acc, [action.disposal ?? 'landfill']: (acc[action.disposal ?? 'landfill'] ?? 0) + 1 }),
     { recycled: 0, reused: 0, composted: 0, landfill: 0 }
   );
 

@@ -10,7 +10,7 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "noEmit": true,
-    "types": ["react", "react-native"],
+    "types": ["react", "react-native", "node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

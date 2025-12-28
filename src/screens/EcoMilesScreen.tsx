@@ -4,8 +4,10 @@ import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { useEcoSphereStore } from '@/state/store';
 import ActionList from '@/components/ActionList';
+import { TravelLog } from '@/types';
 
 type TravelMethod = 'walking' | 'cycling' | 'bus' | 'metro' | 'car' | 'ev';
+type Coordinates = { latitude: number; longitude: number };
 
 const travelEmissionFactor: Record<TravelMethod, number> = {
   walking: 0,
@@ -18,21 +20,26 @@ const travelEmissionFactor: Record<TravelMethod, number> = {
 
 export const EcoMilesScreen: React.FC = () => {
   const { logTravel, ecoActions } = useEcoSphereStore();
-  const travelLogs = useMemo(() => ecoActions.filter(action => action.category === 'travel'), [ecoActions]);
+  const travelLogs = useMemo(
+    () => ecoActions.filter((action): action is TravelLog => action.category === 'travel'),
+    [ecoActions]
+  );
   const [method, setMethod] = useState<TravelMethod>('cycling');
   const [distance, setDistance] = useState('3.5');
   const [autoDistance, setAutoDistance] = useState<number | null>(null);
-  const [startCoords, setStartCoords] = useState<Location.LocationObjectCoords | null>(null);
-  const [endCoords, setEndCoords] = useState<Location.LocationObjectCoords | null>(null);
+  const [startCoords, setStartCoords] = useState<Coordinates | null>(null);
+  const [endCoords, setEndCoords] = useState<Coordinates | null>(null);
   const [hasLocationPermission, setHasLocationPermission] = useState<boolean | null>(null);
 
   const carFactor = travelEmissionFactor.car;
 
   useEffect(() => {
-    Location.requestForegroundPermissionsAsync().then(({ status }) => setHasLocationPermission(status === 'granted'));
+    Location.requestForegroundPermissionsAsync().then(({ status }: { status: string }) =>
+      setHasLocationPermission(status === 'granted')
+    );
   }, []);
 
-  const haversineKm = (a: Location.LocationObjectCoords, b: Location.LocationObjectCoords) => {
+  const haversineKm = (a: Coordinates, b: Coordinates) => {
     const toRad = (value: number) => (value * Math.PI) / 180;
     const R = 6371; // km
     const dLat = toRad(b.latitude - a.latitude);

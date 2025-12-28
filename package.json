@@ -7,7 +7,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.17",
@@ -31,6 +32,8 @@
   "devDependencies": {
     "@types/react": "18.2.64",
     "@types/react-native": "0.73.0",
+    "@types/react-native-async-storage__async-storage": "^1.19.8",
+    "@types/node": "^22.7.7",
     "typescript": "5.4.5"
   }
 }

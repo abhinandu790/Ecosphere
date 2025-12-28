@@ -10,6 +10,7 @@ import {
   EnergyUse,
   FoodOrder,
   LeaderboardEntry,
+  ImpactLevel,
   ScanAction,
   TravelLog,
   UserProfile,
@@ -44,6 +45,13 @@ interface EcoSphereState {
 
 const randomId = () => Math.random().toString(36).slice(2, 10);
 const today = () => format(new Date(), 'yyyy-MM-dd');
+
+const toImpactLevel = (value?: string): ImpactLevel => {
+  const normalized = (value ?? 'low').toLowerCase();
+  if (normalized === 'medium') return 'Medium';
+  if (normalized === 'high') return 'High';
+  return 'Low';
+};
 
 const impactFromKg = (kg: number): EcoAction['impactLevel'] => {
   if (kg < 1) return 'Low';
@@ -94,9 +102,11 @@ const mapAction = (apiAction: any): EcoAction => ({
 const deriveBadges = (actions: EcoAction[], user?: UserProfile) => {
   const badges = new Set(user?.badges ?? []);
   const lowImpact = actions.filter(a => a.impactLevel === 'Low').length;
-  const localBuys = actions.filter(a => a.origin === 'local').length;
-  const composted = actions.filter(a => a.disposal === 'composted').length;
-  const carAlternatives = actions.filter(a => a.method && a.method !== 'car').length;
+  const localBuys = actions.filter((a): a is ScanAction => a.category === 'food' && (a as ScanAction).origin === 'local').length;
+  const composted = actions.filter((a): a is WasteAction => a.category === 'waste' && (a as WasteAction).disposal === 'composted').length;
+  const carAlternatives = actions.filter(
+    (a): a is TravelLog => a.category === 'travel' && (a as TravelLog).method !== 'car'
+  ).length;
   if (lowImpact >= 8) badges.add('Eco Hero');
   if (localBuys >= 3) badges.add('Local Shopper');
   if (composted >= 3) badges.add('Zero Waste');
@@ -125,7 +135,7 @@ const initialEvents: CommunityEvent[] = [
   { id: randomId(), name: 'Composting 101', location: 'Community Hub', date: today(), points: 40 },
 ];
 
-const addAlertFromReminder = (alert: AlertItem) => ({ ...alert, id: randomId() });
+const addAlertFromReminder = (alert: Omit<AlertItem, 'id'>): AlertItem => ({ ...alert, id: randomId() });
 
 export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
   user: null,
@@ -185,7 +195,7 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
         addAlertFromReminder({
           message: rem.message,
           category: rem.severity ?? 'medium',
-          severity: (rem.severity || 'low').charAt(0).toUpperCase() + (rem.severity || 'low').slice(1) as any,
+          severity: toImpactLevel(rem.severity),
         }),
       );
       const badges = impact.data?.badges || profile.data.badges || [];
@@ -369,7 +379,7 @@ export const useEcoSphereStore = create<EcoSphereState>((set, get) => ({
     }
   },
   computeEcoScore: () => computeEcoScoreFromActions(get().ecoActions),
-  addAlert: alert => set(state => ({ alerts: [addAlertFromReminder(alert as AlertItem), ...state.alerts] })),
+  addAlert: alert => set(state => ({ alerts: [addAlertFromReminder(alert), ...state.alerts] })),
   completeEvent: async eventId => {
     try {
       await eventsApi.complete(eventId);

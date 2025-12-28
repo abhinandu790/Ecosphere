@@ -19,10 +19,12 @@ export const EcoScanScreen: React.FC = () => {
   const [scannerActive, setScannerActive] = useState(false);
 
   useEffect(() => {
-    BarCodeScanner.requestPermissionsAsync().then(({ status }) => setHasPermission(status === 'granted'));
+    BarCodeScanner.requestPermissionsAsync().then((permission: { status: string }) =>
+      setHasPermission(permission.status === 'granted')
+    );
   }, []);
 
-  const onBarCodeScanned = ({ data }: BarCodeScannerResult) => {
+  const onBarCodeScanned = ({ data }: { data: string }) => {
     setBarcode(data);
     setScannerActive(false);
   };
